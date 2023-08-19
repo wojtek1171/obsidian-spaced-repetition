@@ -24,6 +24,7 @@ import {
 } from "src/constants";
 import { escapeRegexString, cyrb53 } from "src/utils";
 import { t } from "src/lang/helpers";
+import { SRSettings } from "./settings";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -759,19 +760,23 @@ export class Deck {
         deck.createDeck(deckPath);
     }
 
-    insertFlashcard(deckPath: string[], cardObj: Card): void {
+    insertFlashcard(deckPath: string[], cardObj: Card, settings: SRSettings): void {
+        const reviewsLimit: number = settings.maxReviewsPerDay;
+        const newCardsLimit: number = settings.newCardsPerDay;
         if (cardObj.isDue) {
-            this.dueFlashcardsCount++;
+            this.dueFlashcardsCount < reviewsLimit ? this.dueFlashcardsCount++ : reviewsLimit;
         } else {
-            this.newFlashcardsCount++;
+            this.newFlashcardsCount < newCardsLimit ? this.newFlashcardsCount++ : newCardsLimit;
         }
         this.totalFlashcards++;
 
         if (deckPath.length === 0) {
             if (cardObj.isDue) {
                 this.dueFlashcards.push(cardObj);
+                this.dueFlashcards = this.dueFlashcards.slice(0, reviewsLimit);
             } else {
                 this.newFlashcards.push(cardObj);
+                this.newFlashcards = this.newFlashcards.slice(0, newCardsLimit);
             }
             return;
         }
@@ -779,7 +784,7 @@ export class Deck {
         const deckName: string = deckPath.shift();
         for (const deck of this.subdecks) {
             if (deckName === deck.deckName) {
-                deck.insertFlashcard(deckPath, cardObj);
+                deck.insertFlashcard(deckPath, cardObj, settings);
                 return;
             }
         }

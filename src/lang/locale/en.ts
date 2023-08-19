@@ -67,6 +67,11 @@ export default {
     FLASHCARD_TAGS: "Flashcard tags",
     FLASHCARD_TAGS_DESC:
         "Enter tags separated by spaces or newlines i.e. #flashcards #deck2 #deck3.",
+    FLASHCARD_NEW_CARD_LABEL: "New cards per day",
+    FLASHCARD_NEW_CARD_DESC: "Sets daily limit for new cards",
+    FLASHCARD_MAX_REVIEW_LABEL: "Maximum reviews per day",
+    FLASHCARD_MAX_REVIEW_DESC: "Sets daily limits for reviews",
+    MIN_ONE_CARD: "The number of cards per day must be at least 1",
     CONVERT_FOLDERS_TO_DECKS: "Convert folders to decks and subdecks?",
     CONVERT_FOLDERS_TO_DECKS_DESC: "This is an alternative to the Flashcard tags option above.",
     INLINE_SCHEDULING_COMMENTS:

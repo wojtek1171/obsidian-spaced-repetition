@@ -812,7 +812,7 @@ export default class SRPlugin extends Plugin {
                 if (ignoreStats) {
                     this.cardStats.newCount++;
                     cardObj.isDue = true;
-                    this.deckTree.insertFlashcard([...deckPath], cardObj);
+                    this.deckTree.insertFlashcard([...deckPath], cardObj, settings);
                 } else if (i < scheduling.length) {
                     const dueUnix: number = window
                         .moment(scheduling[i][1], ["YYYY-MM-DD", "DD-MM-YYYY"])
@@ -851,7 +851,7 @@ export default class SRPlugin extends Plugin {
                         cardObj.interval = interval;
                         cardObj.ease = ease;
                         cardObj.delayBeforeReview = now - dueUnix;
-                        this.deckTree.insertFlashcard([...deckPath], cardObj);
+                        this.deckTree.insertFlashcard([...deckPath], cardObj, settings);
                     } else {
                         this.deckTree.countFlashcard([...deckPath]);
                         continue;
@@ -862,7 +862,7 @@ export default class SRPlugin extends Plugin {
                         this.deckTree.countFlashcard([...deckPath]);
                         continue;
                     }
-                    this.deckTree.insertFlashcard([...deckPath], cardObj);
+                    this.deckTree.insertFlashcard([...deckPath], cardObj, settings);
                 }
 
                 siblings.push(cardObj);
