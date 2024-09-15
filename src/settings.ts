@@ -23,6 +23,8 @@ export interface SRSettings {
     multilineCardSeparator: string;
     multilineReversedCardSeparator: string;
     editLaterTag: string;
+    newCardsPerDay: number;
+    maxReviewsPerDay: number;
     // notes
     enableNoteReviewPaneOnStartup: boolean;
     tagsToReview: string[];
@@ -64,6 +66,8 @@ export const DEFAULT_SETTINGS: SRSettings = {
     multilineCardSeparator: "?",
     multilineReversedCardSeparator: "??",
     editLaterTag: "#edit-later",
+    newCardsPerDay: 9999,
+    maxReviewsPerDay: 9999,
     // notes
     enableNoteReviewPaneOnStartup: true,
     tagsToReview: ["#review"],
@@ -448,6 +452,84 @@ export class SRSettingTab extends PluginSettingTab {
                         this.display();
                     });
             });
+        
+
+            new Setting(containerEl)
+            .setName(t("FLASHCARD_NEW_CARD_LABEL"))
+            .setDesc(t("FLASHCARD_NEW_CARD_DESC"))
+            .addText((text) =>
+                text
+                    .setValue(this.plugin.data.settings.newCardsPerDay.toString())
+                    .onChange((value) => {
+                        applySettingsUpdate(async () => {
+                            const numValue: number = Number.parseInt(value);
+                            if (!isNaN(numValue)) {
+                                if (numValue < 1) {
+                                    new Notice(t("MIN_ONE_CARD"));
+                                    text.setValue(
+                                        this.plugin.data.settings.newCardsPerDay.toString(),
+                                    );
+                                    return;
+                                }
+
+                                this.plugin.data.settings.newCardsPerDay = numValue;
+                                await this.plugin.savePluginData();
+                            } else {
+                                new Notice(t("VALID_NUMBER_WARNING"));
+                            }
+                        });
+                    }),
+            )
+            .addExtraButton((button) => {
+                button
+                    .setIcon("reset")
+                    .setTooltip(t("RESET_DEFAULT"))
+                    .onClick(async () => {
+                        this.plugin.data.settings.newCardsPerDay = DEFAULT_SETTINGS.newCardsPerDay;
+                        await this.plugin.savePluginData();
+                        this.display();
+                    });
+            });
+
+        new Setting(containerEl)
+            .setName(t("FLASHCARD_MAX_REVIEW_LABEL"))
+            .setDesc(t("FLASHCARD_MAX_REVIEW_DESC"))
+            .addText((text) =>
+                text
+                    .setValue(this.plugin.data.settings.maxReviewsPerDay.toString())
+                    .onChange((value) => {
+                        applySettingsUpdate(async () => {
+                            const numValue: number = Number.parseInt(value);
+                            if (!isNaN(numValue)) {
+                                if (numValue < 1) {
+                                    new Notice(t("MIN_ONE_CARD"));
+                                    text.setValue(
+                                        this.plugin.data.settings.maxReviewsPerDay.toString(),
+                                    );
+                                    return;
+                                }
+
+                                this.plugin.data.settings.maxReviewsPerDay = numValue;
+                                await this.plugin.savePluginData();
+                            } else {
+                                new Notice(t("VALID_NUMBER_WARNING"));
+                            }
+                        });
+                    }),
+            )
+            .addExtraButton((button) => {
+                button
+                    .setIcon("reset")
+                    .setTooltip(t("RESET_DEFAULT"))
+                    .onClick(async () => {
+                        this.plugin.data.settings.maxReviewsPerDay =
+                            DEFAULT_SETTINGS.maxReviewsPerDay;
+                        await this.plugin.savePluginData();
+                        this.display();
+                    });
+            });
+
+
 
         containerEl.createEl("h3", { text: `${t("NOTES")}` });
 

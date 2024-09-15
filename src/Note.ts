@@ -21,10 +21,10 @@ export class Note {
         questionList.forEach((question) => (question.note = this));
     }
 
-    appendCardsToDeck(deck: Deck): void {
+    appendCardsToDeck(deck: Deck, settings: SRSettings): void {
         for (const question of this.questionList) {
             for (const card of question.cards) {
-                deck.appendCard(question.topicPath, card);
+                deck.appendCard(question.topicPath, card, settings);
             }
         }
     }

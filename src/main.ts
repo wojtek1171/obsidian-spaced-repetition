@@ -272,7 +272,7 @@ export default class SRPlugin extends Plugin {
         const note: Note = await this.loadNote(noteFile, topicPath);
 
         const deckTree = new Deck("root", null);
-        note.appendCardsToDeck(deckTree);
+        note.appendCardsToDeck(deckTree, this.data.settings);
         const remainingDeckTree = DeckTreeFilter.filterForRemainingCards(
             this.questionPostponementList,
             deckTree,
@@ -378,7 +378,7 @@ export default class SRPlugin extends Plugin {
                     note,
                     this.data.settings,
                 );
-                note.appendCardsToDeck(fullDeckTree);
+                note.appendCardsToDeck(fullDeckTree, this.data.settings);
 
                 if (flashcardsInNoteAvgEase > 0) {
                     this.easeByPath.setEaseForPath(note.filePath, flashcardsInNoteAvgEase);

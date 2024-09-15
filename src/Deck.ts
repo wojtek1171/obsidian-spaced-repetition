@@ -3,6 +3,7 @@ import { FlashcardReviewMode } from "./FlashcardReviewSequencer";
 import { Question } from "./Question";
 import { IQuestionPostponementList } from "./QuestionPostponementList";
 import { TopicPath } from "./TopicPath";
+import { SRSettings } from "./settings";
 
 export enum CardListType {
     NewCard,
@@ -126,11 +127,18 @@ export class Deck {
         return cardListType == CardListType.DueCard ? this.dueFlashcards : this.newFlashcards;
     }
 
-    appendCard(topicPath: TopicPath, cardObj: Card): void {
+    appendCard(topicPath: TopicPath, cardObj: Card, settings?: SRSettings): void {
         const deck: Deck = this.getOrCreateDeck(topicPath);
         const cardList: Card[] = deck.getCardListForCardType(cardObj.cardListType);
 
-        cardList.push(cardObj);
+        if(settings) {
+            if(cardObj.cardListType === CardListType.DueCard || 
+                (cardObj.cardListType === CardListType.NewCard && deck.newFlashcards.length < settings.newCardsPerDay)) {
+                cardList.push(cardObj);
+            }
+        } else {
+            cardList.push(cardObj);
+        }
     }
 
     deleteCard(card: Card): void {
